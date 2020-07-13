@@ -10,44 +10,147 @@ class Home extends Component {
         super();
         this.state = {
             provinces: [],
+            originCities: [],
+            destinationCities: [],
+            selectedOriginProvince: null,
+            selectedOriginCity: null,
+            selectedDestinationProvince: null,
+            selectedDestinationCity: null,
+            weight: 0,
+            courier: null
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.onLoadProvince()
     }
 
     onLoadProvince = () => {
-        fetch(URL+'/province',{
+        fetch(URL + '/province', {
             method: 'GET',
             headers: {
                 'key': KEY
             }
-        }).then((response)=>response.json())
-        .then((responseData)=>{
-            let status = responseData['rajaongkir']['status']['code'];
-            if(status == 200){
-                this.setState({
-                    provinces: responseData['rajaongkir']['results']
+        }).then((response) => response.json())
+            .then((responseData) => {
+                let status = responseData['rajaongkir']['status']['code'];
+                if (status == 200) {
+                    this.setState({
+                        provinces: responseData['rajaongkir']['results']
+                    })
+                }
+            })
+    }
+
+    onOriginProvinceChange = (val) => {
+        this.setState({
+            selectedOriginProvince: val
+        }, () => {
+            fetch(URL + '/city?province=' + this.state.selectedOriginProvince.province_id, {
+                method: 'GET',
+                headers: {
+                    'key': KEY
+                }
+            }).then((response) => response.json())
+                .then((responseData) => {
+                    let status = responseData['rajaongkir']['status']['code'];
+                    if (status == 200) {
+                        this.setState({
+                            originCities: responseData['rajaongkir']['results']
+                        })
+                    }
                 })
-            }
+        })
+    }
+
+    onDestinationProvinceChange = (val) => {
+        this.setState({
+            selectedDestinationProvince: val
+        }, () => {
+            fetch(URL + '/city?province=' + this.state.selectedDestinationProvince.province_id, {
+                method: 'GET',
+                headers: {
+                    'key': KEY
+                }
+            }).then((response) => response.json())
+                .then((responseData) => {
+                    let status = responseData['rajaongkir']['status']['code'];
+                    if (status == 200) {
+                        this.setState({
+                            destinationCities: responseData['rajaongkir']['results']
+                        })
+                    }
+                })
+        })
+    }
+
+    onOriginCityChange = (val) => {
+        this.setState({
+            selectedOriginCity: val
+        })
+    }
+
+    onDestinationCityChange = (val) => {
+        this.setState({
+            selectedDestinationCity: val
         })
     }
 
 
     onNavigationDetail = () => {
-        Actions.detail()
+        let params = {
+            originCities: this.state.selectedOriginCity.city_id,
+            destinationCities: this.state.selectedDestinationCity.city_id,
+            weight: this.state.weight,
+            courier: this.state.courier
+        }
+        Actions.detail({data:params})
     }
     render() {
         let provinceItems = <View></View>
-        if(this.state.provinces){
+        let provinceItemDestination = <View></View>
+        let originCityItems = <View></View>
+        let destinationCitiesItems = <View></View>
+        if (this.state.provinces) {
             provinceItems = this.state.provinces.map(prov => {
-                return(
+                return (
                     <Picker.Item
-                    key={prov.province_id}
-                    label={prov.province}
-                    value={prov}
+                        key={prov.province_id}
+                        label={prov.province}
+                        value={prov}
                     />
+                )
+            })
+        }
+        if (this.state.provinces) {
+            provinceItemDestination = this.state.provinces.map(prov => {
+                return (
+                    <Picker.Item
+                        key={prov.province_id}
+                        label={prov.province}
+                        value={prov}
+                    />
+                )
+            })
+        }
+
+        if (this.state.originCities) {
+            originCityItems = this.state.originCities.map(city => {
+                return (
+                    <Picker.Item
+                        key={city.city_id}
+                        label={city.city_name}
+                        value={city} />
+                )
+            })
+        }
+        if (this.state.destinationCities) {
+            destinationCitiesItems = this.state.destinationCities.map(city => {
+                return (
+                    <Picker.Item
+                        key={city.city_id}
+                        label={city.city_name}
+                        value={city} />
                 )
             })
         }
@@ -79,8 +182,10 @@ class Home extends Component {
                                         placeholderStyle={{
                                             color: 'blue'
                                         }}
-                                    >
-                                   {provinceItems}
+
+                                        selectedValue={this.state.selectedOriginProvince}
+                                        onValueChange={this.onOriginProvinceChange}>
+                                        {provinceItems}
                                     </Picker>
                                 </Item>
                                 {/* kota */}
@@ -94,12 +199,11 @@ class Home extends Component {
                                         placeholderStyle={{
                                             color: 'wheat'
                                         }}
+                                        selectedValue={this.state.selectedOriginCity}
+                                        onValueChange={this.onOriginCityChange}
                                     >
-                                        <Picker.Item label="Pilih Kota" value="key0" />
-                                        <Picker.Item label="ATM Card" value="key1" />
-                                        <Picker.Item label="Debit Card" value="key2" />
-                                        <Picker.Item label="Credit Card" value="key3" />
-                                        <Picker.Item label="Net Banking" value="key4" />
+                                        {originCityItems}
+
                                     </Picker>
                                 </Item>
                             </Body>
@@ -114,7 +218,7 @@ class Home extends Component {
                         </CardItem>
                         <CardItem>
                             <Body>
-                                {/* provinsi */}
+                                {/* provinsi tujuan */}
                                 <Item picker>
                                     <Picker
                                         mode="dropdown"
@@ -125,15 +229,13 @@ class Home extends Component {
                                         placeholderStyle={{
                                             color: 'wheat'
                                         }}
-                                    >
-                                        <Picker.Item label="Pilih Provinsi" value="key0" />
-                                        <Picker.Item label="ATM Card" value="key1" />
-                                        <Picker.Item label="Debit Card" value="key2" />
-                                        <Picker.Item label="Credit Card" value="key3" />
-                                        <Picker.Item label="Net Banking" value="key4" />
+
+                                        selectedValue={this.state.selectedDestinationProvince}
+                                        onValueChange={this.onDestinationProvinceChange}>
+                                        {provinceItemDestination}
                                     </Picker>
                                 </Item>
-                                {/* kota */}
+                                {/* kota tujuan */}
                                 <Item picker style={{ marginTop: 15 }}>
                                     <Picker
                                         mode="dropdown"
@@ -144,12 +246,10 @@ class Home extends Component {
                                         placeholderStyle={{
                                             color: 'wheat'
                                         }}
+                                        selectedValue={this.state.selectedDestinationCity}
+                                        onValueChange={this.onDestinationCityChange}
                                     >
-                                        <Picker.Item label="Pilih Kota" value="key0" />
-                                        <Picker.Item label="ATM Card" value="key1" />
-                                        <Picker.Item label="Debit Card" value="key2" />
-                                        <Picker.Item label="Credit Card" value="key3" />
-                                        <Picker.Item label="Net Banking" value="key4" />
+                                        {destinationCitiesItems}
                                     </Picker>
                                 </Item>
                             </Body>
@@ -165,7 +265,10 @@ class Home extends Component {
                         <Body>
                             <Item floatingLabel>
                                 <Label>Grams</Label>
-                                <Input />
+                                <Input
+                                    onChangeText={(val) => this.setState({ weight: val })}
+                                    maxLength={6}
+                                />
                             </Item>
                         </Body>
                     </Card>
@@ -187,6 +290,8 @@ class Home extends Component {
                                         placeholderStyle={{
                                             color: 'wheat'
                                         }}
+                                        selectedValue={this.state.courier}
+                                        onValueChange={(val) => this.setState({ courier: val })}
                                     >
                                         <Picker.Item label="JNE" value="jne" />
                                         <Picker.Item label="TIKI" value="tiki" />
