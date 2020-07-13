@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { Container, Header, Left, Body, Right, Title, Subtitle, Content, Card, CardItem, Item, Picker, Icon, Label, Input, Button } from 'native-base'
+import { Container, Header, Left, Body, Right, Title, Subtitle, Content, Card, CardItem, Item, Picker, Icon, Label, Input, Button } from 'native-base';
+import {Actions} from 'react-native-router-flux'
 
 class Home extends Component {
+    onNavigationDetail =()=>{
+        Actions.detail()
+    }
     render() {
         return (
             <Container>
@@ -156,7 +160,9 @@ class Home extends Component {
                     </Card>
                 </Content>
                 <View style={{justifyContent:'flex-end', marginBottom:5}}>
-                    <Button style={{margin:10, justifyContent:'center'}}>
+                    <Button 
+                    onPress={this.onNavigationDetail}
+                    style={{margin:10, justifyContent:'center'}}>
                         <Text style={{color:'white', fontWeight:'bold', fontSize:18}}>Cek Ongkir</Text>
                     </Button>
                 </View>

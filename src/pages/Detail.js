@@ -1,23 +1,29 @@
 import React, { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { Container, Header, Left, Body, Right, Title, Subtitle, Content } from 'native-base'
+import { Container, Header, Left, Body, Right, Title, Subtitle, Content, Button, Icon } from 'native-base'
 
 class Detail extends Component {
     render() {
         return (
             <Container>
-            <Header>
-                <Left />
-                <Body>
-                    <Title>Detail</Title>
-                    <Subtitle>Cek detail disini</Subtitle>
-                </Body>
-                <Right />
-            </Header>
-            <Content>
+                <Header>
+                    <Left>
+                        <Button>
+                            <Icon
+                                type='Entypo' name='chevron-small-left'
+                                style={{ color: 'white'}} />
+                        </Button>
+                    </Left>
+                    <Body style={{marginLeft:10}}>
+                        <Title>Detail Ongkir</Title>
+                        <Subtitle>Cek Detail Ongkos Kirim disini</Subtitle>
+                    </Body>
+                    <Right />
+                </Header>
+                <Content>
 
-            </Content>
-        </Container>
+                </Content>
+            </Container>
         )
     }
 }
