@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { Container, Header, Left, Body, Right, Title, Subtitle, Content, Button, Icon, List, ListItem, Thumbnail } from 'native-base'
-import { Actions } from 'react-native-router-flux'
-import { URL, KEY } from '../utils/Const';
+import { Body, Button, Container, Content, Header, Icon, Left, List, ListItem, Right, Subtitle, Thumbnail, Title } from 'native-base';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import NumberFormat from 'react-number-format';
+import { KEY, URL } from '../utils/Const';
 
 const LOGO = {
     'jne': "https://kutakhabispikir.files.wordpress.com/2016/06/jne.jpg?w=1008",
