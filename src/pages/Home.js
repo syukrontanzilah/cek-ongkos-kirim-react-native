@@ -260,7 +260,7 @@ class Home extends Component {
                     {/* berat */}
                     <Card>
                         <CardItem header>
-                            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Berat Paket</Text>
+                            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Berat Paket (Dalam Gram) </Text>
                         </CardItem>
                         <Body>
                             <Item floatingLabel>
@@ -268,6 +268,7 @@ class Home extends Component {
                                 <Input
                                     onChangeText={(val) => this.setState({ weight: val })}
                                     maxLength={6}
+                                    keyboardType='numeric'
                                 />
                             </Item>
                         </Body>
