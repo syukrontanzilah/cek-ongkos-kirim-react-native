@@ -5,6 +5,7 @@ import Home from '../pages/Home';
 
 class Routes extends Component {
     render() {
+        console.disableYellowBox = true;
         return (
             <Router>
                 <Scene key="root" hideNavBar={true}>
